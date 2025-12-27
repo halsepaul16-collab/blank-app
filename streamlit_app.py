@@ -51,8 +51,14 @@ if st.button("Find a Recipe"):
         with st.spinner("Thinking of a calm recipe..."):
             try:
                 genai.configure(api_key=api_key)
-                model = genai.GenerativeModel("gemini-pro", system_instruction=system_prompt)
-                response = model.generate_content(f"Ingredients: {ingredients}. Energy Level: {energy_level}")
+                
+                # Using the standard "gemini-pro" model which is available everywhere
+                model = genai.GenerativeModel("gemini-pro")
+                
+                # We combine instructions + ingredients into one message to be safe
+                full_message = system_prompt + f"\n\nUSER SITUATION:\nIngredients: {ingredients}\nEnergy Level: {energy_level}"
+                
+                response = model.generate_content(full_message)
                 st.markdown("---")
                 st.markdown(response.text)
                 st.success("You can do this.")
