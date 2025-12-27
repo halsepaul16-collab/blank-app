@@ -52,7 +52,7 @@ if st.button("Find a Recipe"):
             try:
                 genai.configure(api_key=api_key)
                 
-                # Using the standard "gemini-pro" model which is available everywhere
+                # Using the standard "gemini-1.5-flash" model which is available everywhere
                 model = genai.GenerativeModel("gemini-pro")
                 
                 # We combine instructions + ingredients into one message to be safe
