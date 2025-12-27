@@ -51,7 +51,7 @@ if st.button("Find a Recipe"):
         with st.spinner("Thinking of a calm recipe..."):
             try:
                 genai.configure(api_key=api_key)
-                model = genai.GenerativeModel("gemini-1.5-flash", system_instruction=system_prompt)
+                model = genai.GenerativeModel("gemini-pro", system_instruction=system_prompt)
                 response = model.generate_content(f"Ingredients: {ingredients}. Energy Level: {energy_level}")
                 st.markdown("---")
                 st.markdown(response.text)
