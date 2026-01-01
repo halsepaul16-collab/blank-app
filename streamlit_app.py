@@ -30,13 +30,15 @@ Rice, Pasta, Potatoes"""
     
     pantry_items = st.text_area("My Staples:", value=default_pantry, height=200)
 
-    # --- API KEY LOGIC ---
-    # Looks for key in the Safe (Secrets). If not there, asks user.
-    if "GOOGLE_API_KEY" in st.secrets:
-        api_key = st.secrets["GOOGLE_API_KEY"]
-        st.success("Key loaded securely.")
+    # --- API KEY LOGIC (CRASH PROOF VERSION) ---
+    # We use .get() so it doesn't crash if the key is missing
+    api_key = st.secrets.get("GOOGLE_API_KEY")
+
+    if api_key:
+        st.success("Connected to Kitchen Brain")
     else:
-        api_key = st.text_input("Google API Key", type="password")
+        st.error("⚠️ The API Key is missing from Secrets.")
+        st.info("Please tell Paul to add the key in the App Settings.")
 
 # --- MAIN INPUTS ---
 col1, col2 = st.columns([2, 1])
@@ -65,7 +67,7 @@ If TIRED: Keep it simple.
 # --- THE ACTION ---
 if st.button("Plan My Meal"):
     if not api_key:
-        st.warning("Please enter your API Key.")
+        st.warning("I cannot cook without the API Key.")
     elif not fresh_ingredients:
         st.warning("Please enter fresh ingredients.")
     else:
