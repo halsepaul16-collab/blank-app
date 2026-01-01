@@ -17,10 +17,10 @@ st.markdown("""
 st.title("🍳 The Calm Cook")
 st.markdown("I am your friendly kitchen companion. Tell me what fresh food you have, and I'll combine it with your pantry staples.")
 
-# --- SIDEBAR: SETTINGS & KNOWLEDGE BASE ---
+# --- SIDEBAR: KNOWLEDGE BASE ---
 with st.sidebar:
     st.header("🏠 Your Knowledge Base")
-    st.info("I assume you always have these. Edit if you run out!")
+    st.info("I assume you always have these.")
     
     default_pantry = """Salt, Black Pepper, Olive Oil, Vegetable Oil, Butter
 Plain Flour, Sugar, Honey, Soy Sauce
@@ -30,13 +30,12 @@ Rice, Pasta, Potatoes"""
     
     pantry_items = st.text_area("My Staples:", value=default_pantry, height=200)
 
-    # --- API KEY LOGIC (The Fix) ---
-    # Check if key is in the "Safe" (Secrets)
+    # --- API KEY LOGIC ---
+    # Looks for key in the Safe (Secrets). If not there, asks user.
     if "GOOGLE_API_KEY" in st.secrets:
         api_key = st.secrets["GOOGLE_API_KEY"]
         st.success("Key loaded securely.")
     else:
-        # If not in safe, ask for it
         api_key = st.text_input("Google API Key", type="password")
 
 # --- MAIN INPUTS ---
@@ -70,7 +69,7 @@ if st.button("Plan My Meal"):
     elif not fresh_ingredients:
         st.warning("Please enter fresh ingredients.")
     else:
-        with st.spinner("Checking your pantry..."):
+        with st.spinner("Planning your meal..."):
             try:
                 genai.configure(api_key=api_key)
                 
@@ -86,11 +85,12 @@ if st.button("Plan My Meal"):
 
                 # The Recipe Request
                 full_prompt = f"""
-                Fresh: {fresh_ingredients}
-                Pantry: {pantry_items}
-                Energy: {energy_level}
-                Servings: {serving_size}
-                Make a recipe.
+                Fresh Ingredients: {fresh_ingredients}
+                Pantry Staples: {pantry_items}
+                Energy Level: {energy_level}
+                Serving Size: {serving_size}
+                
+                Please create a recipe using these ingredients.
                 """
                 
                 model = genai.GenerativeModel(valid_model_name, system_instruction=system_prompt)
